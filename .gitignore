@@ -1,0 +1,66 @@
+# ── Secrets & Environment ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+
+# ── Go ───────────────────────────────────────────────────────────────────────
+# Compiled binaries
+cot-server
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+#─── Test & benchmark artifacts ───────────────────────────────────────────────────
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Go build cache (local)
+/vendor/
+
+# ── Next.js / Node ───────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+build/
+.vercel/
+
+# ───Debug logs ───────────────────────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Firebase ─────────────────────────────────────────────────────────────────
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebaserc
+
+# ── Docker ───────────────────────────────────────────────────────────────────
+# Don't ignore docker-compose or Dockerfile — they are project files
+# Ignore local override files
+docker-compose.override.yml
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+#─── Text Files ───────────────────────────────────────────────────────────────────
+*.txt
+
+#─── Claude ───────────────────────────────────────────────────────────────────
+.claude
