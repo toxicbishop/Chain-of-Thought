@@ -21,15 +21,18 @@ import (
 var ErrNoAPIKey = errors.New("llm: GEMINI_API_KEY is not set")
 
 const (
-	defaultModel    = "gemini-2.0-flash"
-	defaultEndpoint = "https://generativelanguage.googleapis.com/v1beta/models"
-	defaultTimeout  = 60 * time.Second
+	defaultModel          = "gemini-2.0-flash"
+	defaultEmbeddingModel = "gemini-embedding-001"
+	defaultEndpoint       = "https://generativelanguage.googleapis.com/v1beta/models"
+	defaultTimeout        = 60 * time.Second
 )
 
 // Client is a minimal Gemini REST client. The zero value is unusable — use New.
 type Client struct {
 	apiKey   string
+	embedKey string
 	model    string
+	embed    string
 	endpoint string
 	http     *http.Client
 	isOR     bool
@@ -42,7 +45,9 @@ func New() *Client {
 	if orKey := os.Getenv("OPEN_ROUTER.AI"); orKey != "" {
 		return &Client{
 			apiKey:   orKey,
+			embedKey: os.Getenv("GEMINI_API_KEY"),
 			model:    envOr("OPENROUTER_MODEL", "google/gemini-2.5-flash"), // OpenRouter's recommended default for Gemini
+			embed:    envOr("GEMINI_EMBEDDING_MODEL", defaultEmbeddingModel),
 			endpoint: "https://openrouter.ai/api/v1/chat/completions",
 			http:     &http.Client{Timeout: defaultTimeout},
 			isOR:     true,
@@ -51,7 +56,9 @@ func New() *Client {
 
 	return &Client{
 		apiKey:   os.Getenv("GEMINI_API_KEY"),
+		embedKey: os.Getenv("GEMINI_API_KEY"),
 		model:    envOr("GEMINI_MODEL", defaultModel),
+		embed:    envOr("GEMINI_EMBEDDING_MODEL", defaultEmbeddingModel),
 		endpoint: defaultEndpoint,
 		http:     &http.Client{Timeout: defaultTimeout},
 		isOR:     false,
@@ -70,6 +77,9 @@ func (c *Client) Enabled() bool { return c != nil && c.apiKey != "" }
 
 // Model returns the configured model identifier.
 func (c *Client) Model() string { return c.model }
+
+// EmbeddingModel returns the configured Gemini embedding model identifier.
+func (c *Client) EmbeddingModel() string { return c.embed }
 
 // GenOpts tunes a single generation call.
 type GenOpts struct {
@@ -278,15 +288,13 @@ type geminiEmbedResponse struct {
 
 // Embed computes a vector embedding for the given text using Gemini.
 func (c *Client) Embed(ctx context.Context, text string) ([]float32, error) {
-	if !c.Enabled() {
+	if c == nil || c.embedKey == "" {
 		return nil, ErrNoAPIKey
 	}
-	if c.isOR {
-		return nil, fmt.Errorf("embeddings not supported via OpenRouter")
-	}
 
+	model := strings.TrimPrefix(c.embed, "models/")
 	body := geminiEmbedRequest{
-		Model: "models/text-embedding-004",
+		Model: "models/" + model,
 		Content: geminiContent{
 			Parts: []geminiPart{{Text: text}},
 		},
@@ -297,7 +305,7 @@ func (c *Client) Embed(ctx context.Context, text string) ([]float32, error) {
 		return nil, fmt.Errorf("llm: marshal embed request: %w", err)
 	}
 
-	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=%s", c.apiKey)
+	url := fmt.Sprintf("%s/%s:embedContent?key=%s", defaultEndpoint, model, c.embedKey)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(raw))
 	if err != nil {
 		return nil, fmt.Errorf("llm: build embed request: %w", err)
