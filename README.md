@@ -232,6 +232,48 @@ Watch:
 
 ---
 
+## RAG Ingestion From The n8n Workflow
+
+The n8n workbook flow maps into this codebase as:
+
+```text
+Knowledge text -> chunk text -> Gemini embedding -> Weaviate upsert
+User question -> Gemini query embedding -> Weaviate hybrid search -> agent answer
+```
+
+This project uses Weaviate for the vector database role. It replaces the
+Pinecone HTTP nodes from the n8n example, while keeping the same retrieval
+pattern.
+
+Start Weaviate, then ingest your knowledge base:
+
+```bash
+docker-compose up -d weaviate
+go run ./cmd/ingest -source RAG.txt
+```
+
+You can also ingest the exact inline policy style from the n8n lesson:
+
+```bash
+go run ./cmd/ingest -text "EMPLOYEE LEAVE POLICY Employees receive 12 casual leaves annually. Unused leaves cannot be carried forward."
+```
+
+Useful ingestion flags:
+
+| Flag | Default | Purpose |
+| ---- | ------- | ------- |
+| `-source` | `RAG.txt` | Text file to ingest |
+| `-text` | empty | Inline text to ingest instead of a file |
+| `-class` | `Document` | Weaviate class used by the Researcher agent |
+| `-chunk-size` | `800` | Target characters per chunk |
+| `-overlap` | `80` | Character overlap for long chunks |
+
+Once ingested, `/api/reason` and `/api/reason/stream` automatically retrieve
+matching chunks through the Researcher agent before the final answer is
+synthesized.
+
+---
+
 ## Configuration
 
 Copy `.env.example` to `.env.local` and populate the values below.
@@ -245,6 +287,8 @@ Copy `.env.example` to `.env.local` and populate the values below.
 | `FIREBASE_PROJECT_ID` | —                       | **Yes**  | Firebase project ID — used to verify token issuer and audience                                                                                 |
 | `GEMINI_API_KEY`      | —                       | No\*     | Google AI Studio API key for the orchestrator's agents. When unset, agents fall back to deterministic stubs so the visualization still renders |
 | `GEMINI_MODEL`        | `gemini-2.0-flash`      | No       | Gemini model ID used by all agents                                                                                                             |
+| `GEMINI_EMBEDDING_MODEL` | `gemini-embedding-001` | No       | Gemini model ID used for ingestion and query embeddings                                                                                        |
+| `WEAVIATE_URL`        | `localhost:8081`        | No       | Weaviate host used for RAG vector storage and retrieval                                                                                        |
 | `KAFKA_BROKERS`       | —                       | No       | Comma-separated broker list (e.g. `localhost:9092`)                                                                                            |
 | `KAFKA_REQUEST_TOPIC` | `reasoning-requests`    | No       | Topic for async inference requests                                                                                                             |
 | `KAFKA_TRACE_TOPIC`   | `reasoning-traces`      | No       | Topic for published trace events                                                                                                               |
