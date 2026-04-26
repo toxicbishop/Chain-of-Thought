@@ -6,7 +6,6 @@ package orchestrator
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"cot-backend/internal/agents"
 	"cot-backend/internal/transformer"
@@ -30,8 +29,8 @@ func (o *Orchestrator) ExecuteDAG(
 ) []dagResult {
 	// Build adjacency: which tasks depend on which.
 	pending := make(map[string]*transformer.PlannedTask, len(plan.Tasks))
-	depCount := make(map[string]int, len(plan.Tasks))       // remaining unmet deps
-	dependents := make(map[string][]string)                  // taskID → tasks that depend on it
+	depCount := make(map[string]int, len(plan.Tasks)) // remaining unmet deps
+	dependents := make(map[string][]string)           // taskID → tasks that depend on it
 
 	for i := range plan.Tasks {
 		pt := &plan.Tasks[i]
@@ -42,36 +41,46 @@ func (o *Orchestrator) ExecuteDAG(
 		}
 	}
 
-	// Channels for coordination.
 	resultCh := make(chan dagResult, len(plan.Tasks))
 	var results []dagResult
-	var wg sync.WaitGroup
+	active := 0
+
+	launch := func(id string) {
+		pt := pending[id]
+		if pt == nil {
+			return
+		}
+		active++
+		go o.dispatchTask(ctx, pt, state, events, resultCh)
+	}
 
 	// Seed: launch all tasks with zero dependencies.
 	for id, count := range depCount {
 		if count == 0 {
-			wg.Add(1)
-			go o.dispatchTask(ctx, pending[id], state, events, resultCh, &wg)
+			launch(id)
 		}
 	}
 
-	// Closer goroutine: when all tasks finish, close the result channel.
-	go func() {
-		wg.Wait()
-		close(resultCh)
-	}()
-
 	// Consume results and unblock dependents.
-	for dr := range resultCh {
-		results = append(results, dr)
-		state.SetOutput(dr.TaskID, dr.Run.Output)
+	for active > 0 && len(results) < len(plan.Tasks) {
+		select {
+		case <-ctx.Done():
+			return results
+		case dr := <-resultCh:
+			active--
+			if dr.TaskID == "" {
+				continue
+			}
 
-		// Decrement dep count for all tasks that depended on this one.
-		for _, childID := range dependents[dr.TaskID] {
-			depCount[childID]--
-			if depCount[childID] == 0 {
-				wg.Add(1)
-				go o.dispatchTask(ctx, pending[childID], state, events, resultCh, &wg)
+			results = append(results, dr)
+			state.SetOutput(dr.TaskID, dr.Run.Output)
+
+			// Decrement dep count for all tasks that depended on this one.
+			for _, childID := range dependents[dr.TaskID] {
+				depCount[childID]--
+				if depCount[childID] == 0 {
+					launch(childID)
+				}
 			}
 		}
 	}
@@ -86,10 +95,7 @@ func (o *Orchestrator) dispatchTask(
 	state *ExecutionState,
 	events chan<- Event,
 	ch chan<- dagResult,
-	wg *sync.WaitGroup,
 ) {
-	defer wg.Done()
-
 	if ctx.Err() != nil {
 		return
 	}
@@ -112,5 +118,8 @@ func (o *Orchestrator) dispatchTask(
 	}
 
 	run, res := o.executor.RunAgent(ctx, agent, task, pt.DependsOn, events)
-	ch <- dagResult{TaskID: pt.ID, Run: run, Res: res}
+	select {
+	case ch <- dagResult{TaskID: pt.ID, Run: run, Res: res}:
+	case <-ctx.Done():
+	}
 }
