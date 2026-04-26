@@ -2,6 +2,7 @@ package vectordb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -46,6 +47,14 @@ func (c *Client) InitSchema(ctx context.Context, className string) error {
 				Name:     "content",
 				DataType: []string{"text"},
 			},
+			{
+				Name:     "source",
+				DataType: []string{"text"},
+			},
+			{
+				Name:     "chunk_index",
+				DataType: []string{"int"},
+			},
 		},
 	}
 
@@ -53,14 +62,16 @@ func (c *Client) InitSchema(ctx context.Context, className string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create class: %w", err)
 	}
-	
+
 	log.Printf("Successfully created Weaviate schema for %s", className)
 	return nil
 }
 
 type SearchResult struct {
-	Content string
-	Score   float32
+	Content    string
+	Source     string
+	ChunkIndex int
+	Score      float32
 }
 
 // Search performs a hybrid search if vector is provided, otherwise falls back to pure BM25
@@ -71,12 +82,16 @@ func (c *Client) HybridSearch(ctx context.Context, className string, query strin
 
 	builder := c.client.GraphQL().Get().
 		WithClassName(className).
-		WithFields(graphql.Field{Name: "content"}, graphql.Field{
-			Name: "_additional",
-			Fields: []graphql.Field{
-				{Name: "score"},
-			},
-		}).
+		WithFields(
+			graphql.Field{Name: "content"},
+			graphql.Field{Name: "source"},
+			graphql.Field{Name: "chunk_index"},
+			graphql.Field{
+				Name: "_additional",
+				Fields: []graphql.Field{
+					{Name: "score"},
+				},
+			}).
 		WithLimit(limit)
 
 	if len(vector) > 0 {
@@ -118,6 +133,8 @@ func (c *Client) HybridSearch(ctx context.Context, className string, query strin
 		}
 
 		content, _ := itemMap["content"].(string)
+		source, _ := itemMap["source"].(string)
+		chunkIndex := intFromInterface(itemMap["chunk_index"])
 
 		var score float32
 		if additional, ok := itemMap["_additional"].(map[string]interface{}); ok {
@@ -127,8 +144,10 @@ func (c *Client) HybridSearch(ctx context.Context, className string, query strin
 		}
 
 		results = append(results, SearchResult{
-			Content: content,
-			Score:   score,
+			Content:    content,
+			Source:     source,
+			ChunkIndex: chunkIndex,
+			Score:      score,
 		})
 	}
 
@@ -137,16 +156,39 @@ func (c *Client) HybridSearch(ctx context.Context, className string, query strin
 
 // AddDocument is a simple helper to add a document to Weaviate for testing
 func (c *Client) AddDocument(ctx context.Context, className string, content string, vector []float32) error {
+	return c.AddDocumentWithMetadata(ctx, className, content, "", 0, vector)
+}
+
+// AddDocumentWithMetadata inserts one chunk and the vector supplied by the caller.
+func (c *Client) AddDocumentWithMetadata(ctx context.Context, className string, content string, source string, chunkIndex int, vector []float32) error {
 	_, err := c.client.Data().Creator().
 		WithClassName(className).
 		WithProperties(map[string]interface{}{
-			"content": content,
+			"content":     content,
+			"source":      source,
+			"chunk_index": chunkIndex,
 		}).
 		WithVector(vector).
 		Do(ctx)
-	
+
 	if err != nil {
 		log.Printf("failed to add document: %v", err)
 	}
 	return err
+}
+
+func intFromInterface(v interface{}) int {
+	switch n := v.(type) {
+	case int:
+		return n
+	case int64:
+		return int(n)
+	case float64:
+		return int(n)
+	case json.Number:
+		i, _ := n.Int64()
+		return int(i)
+	default:
+		return 0
+	}
 }
