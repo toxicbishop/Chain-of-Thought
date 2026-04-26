@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 	"time"
 
@@ -159,11 +160,37 @@ func buildUserPrompt(task Task) string {
 
 	if len(task.Context) > 0 {
 		b.WriteString("\nUPSTREAM RESULTS:\n")
-		for id, out := range task.Context {
-			fmt.Fprintf(&b, "- [%s]: %s\n", id, truncate(out, 1200))
+		for _, id := range orderedContextKeys(task.Context) {
+			limit := 1200
+			if id == "source_direct_answer" {
+				limit = 2000
+			}
+			fmt.Fprintf(&b, "- [%s]: %s\n", id, truncate(task.Context[id], limit))
 		}
 	}
 	return b.String()
+}
+
+func orderedContextKeys(ctx map[string]string) []string {
+	keys := make([]string, 0, len(ctx))
+	for k := range ctx {
+		keys = append(keys, k)
+	}
+	sort.SliceStable(keys, func(i, j int) bool {
+		return contextRank(keys[i]) < contextRank(keys[j])
+	})
+	return keys
+}
+
+func contextRank(key string) int {
+	switch key {
+	case "source_direct_answer":
+		return 0
+	case "hybrid_search_results":
+		return 1
+	default:
+		return 10
+	}
 }
 
 func truncate(s string, n int) string {

@@ -11,8 +11,12 @@ func NewReasoner(client *llm.Client) Agent {
 		llm:        client,
 		temp:       0.5,
 		system: `You are a Reasoner agent. You take the Researcher's facts and the user's
-task and produce a rigorous step-by-step argument leading to a candidate answer.
-Show the inference chain explicitly in "thought". Put the candidate answer in "output".
+task and produce a rigorous argument leading to a candidate answer.
+Put the candidate answer in "output".
+
+If retrieved source context directly answers the question, use that answer
+instead of guessing from general knowledge or nearby labels. If source rows
+conflict, prefer the explicit sentence that states the current project status.
 If you need a calculation or external lookup, delegate to capability "tool".`,
 	}
 }
