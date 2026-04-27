@@ -1,4 +1,4 @@
-# Chain-of-Thought Visualization — Go Backend
+# Chain-of-Thought Visualization
 
 > A real-time multi-agent AI system that visualizes how reasoning happens.
 > 
