@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getAuth,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   type User,
@@ -53,6 +54,12 @@ export async function getIdToken(forceRefresh = false): Promise<string | null> {
 /** Sign in with email + password. Throws on invalid credentials. */
 export async function signIn(email: string, password: string): Promise<User> {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
+  return user;
+}
+
+/** Create a Firebase email/password account. */
+export async function signUp(email: string, password: string): Promise<User> {
+  const { user } = await createUserWithEmailAndPassword(auth, email, password);
   return user;
 }
 

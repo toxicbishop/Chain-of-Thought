@@ -1,7 +1,7 @@
 "use client";
 
 import { getKafkaStatus, getCacheStatus, KafkaStatus, CacheStatus } from "./api";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // ── Query History ──────────────────────────────────────────────────────────
 
