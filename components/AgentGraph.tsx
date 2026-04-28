@@ -73,7 +73,7 @@ export function AgentGraph({ plan, runs, delegations, activeId, onNodeClick }: P
       const status = statusOf(t.id, runs, activeId);
       const cssVar = tokenFor(t.agent);
       const color = hsl(cssVar);
-      const colorGlow = hslA(cssVar, 0.35);
+      const colorSoft = hslA(cssVar, 0.16);
       const run = runs.find((r) => r.id === t.id);
       const isRunning = status === "running";
       const isDone = status === "done";
@@ -88,9 +88,9 @@ export function AgentGraph({ plan, runs, delegations, activeId, onNodeClick }: P
             <div className="p-3 text-left relative overflow-hidden">
               {isRunning && (
                 <div
-                  className="absolute inset-0 animate-pulse"
+                  className="absolute inset-y-0 left-0 w-1"
                   style={{
-                    background: `radial-gradient(ellipse at center, ${colorGlow}, transparent 70%)`,
+                    background: color,
                   }}
                 />
               )}
@@ -101,7 +101,6 @@ export function AgentGraph({ plan, runs, delegations, activeId, onNodeClick }: P
                     className={`w-2 h-2 rounded-full ${isRunning ? "animate-pulse-dot" : ""}`}
                     style={{
                       backgroundColor: color,
-                      boxShadow: isRunning ? `0 0 8px ${colorGlow}` : "none",
                     }}
                   />
                   <span className="text-[11px] font-bold tracking-tight" style={{ color }}>
@@ -155,11 +154,10 @@ export function AgentGraph({ plan, runs, delegations, activeId, onNodeClick }: P
                   style={{ backgroundColor: hsl("--border") }}
                 >
                   <div
-                    className="h-full rounded-full animate-shimmer"
+                    className="h-full rounded-full"
                     style={{
                       width: "60%",
-                      backgroundImage: `linear-gradient(90deg, ${color}, ${colorGlow}, ${color})`,
-                      backgroundSize: "200% 100%",
+                      backgroundColor: color,
                     }}
                   />
                 </div>
@@ -174,11 +172,9 @@ export function AgentGraph({ plan, runs, delegations, activeId, onNodeClick }: P
           }`,
           borderRadius: "14px",
           width: 210,
-          boxShadow: isRunning
-            ? `0 0 24px ${colorGlow}, 0 4px 12px hsl(0 0% 0% / 0.2)`
-            : isDone
-            ? `0 0 12px ${colorGlow}`
-            : "0 2px 8px hsl(0 0% 0% / 0.15)",
+          boxShadow: isRunning || isDone
+            ? `0 8px 18px hsl(0 0% 0% / 0.16), inset 0 0 0 999px ${colorSoft}`
+            : "0 2px 8px hsl(0 0% 0% / 0.12)",
           cursor: "pointer",
           transition: "all 0.3s ease",
         } as React.CSSProperties,

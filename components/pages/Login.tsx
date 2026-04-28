@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Brain, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { signIn, signUp, onAuthChange } from "@/lib/firebase";
+import { ReasonGraphLogo } from "@/components/ReasonGraphLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,24 +40,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-background relative overflow-hidden">
-      {/* Decorative gradient blob */}
-      <div
-        className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full opacity-20 blur-3xl pointer-events-none"
-        style={{ background: "var(--gradient-primary)" }}
-      />
-      <div
-        className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "var(--gradient-primary)" }}
-      />
-
       <div className="w-full max-w-md relative">
         <div className="text-center mb-8">
-          <div className="inline-flex w-12 h-12 rounded-xl bg-gradient-primary items-center justify-center mb-4 glow-primary">
-            <Brain className="text-primary-foreground" size={22} />
+          <div className="inline-flex w-12 h-12 rounded-xl bg-primary items-center justify-center mb-4 shadow-elegant">
+            <ReasonGraphLogo className="h-7 w-7 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-display font-semibold tracking-tight">Logic Flow</h1>
+          <h1 className="text-2xl font-display font-semibold tracking-tight">ReasonGraph</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Sign in to access the reasoning workbench
+            Sign in to access the reasoning graph
           </p>
         </div>
 
@@ -101,7 +92,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-primary hover:opacity-90 text-primary-foreground border-0 shadow-elegant"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 shadow-elegant"
             >
               {loading ? (
                 <>

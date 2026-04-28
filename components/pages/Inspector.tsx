@@ -57,7 +57,7 @@ export default function Inspector() {
 
   if (error || !trace) {
     return (
-      <div className="p-8 max-w-3xl mx-auto">
+      <div className="p-4 md:p-8 max-w-3xl mx-auto">
         <Button variant="outline" size="sm" onClick={() => router.push("/history")}>
           <ArrowLeft size={14} className="mr-1" /> Back
         </Button>
@@ -71,17 +71,17 @@ export default function Inspector() {
   const selectedRun = trace.agents.find((a) => a.id === selectedAgent);
 
   return (
-    <div className="p-4 md:p-6 max-w-[1600px] mx-auto space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
+    <div className="p-3 sm:p-4 md:p-6 max-w-[1600px] mx-auto space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-start sm:items-center gap-3 min-w-0">
           <Button variant="ghost" size="sm" onClick={() => router.push("/history")}>
             <ArrowLeft size={14} className="mr-1" /> History
           </Button>
           <div>
-            <h1 className="text-lg font-display font-semibold tracking-tight truncate max-w-2xl">
+            <h1 className="text-base sm:text-lg font-display font-semibold tracking-tight line-clamp-2 sm:truncate sm:max-w-2xl">
               {trace.query}
             </h1>
-            <div className="flex items-center gap-3 mt-0.5 text-[11px] text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5 text-[11px] text-muted-foreground">
               {trace.created_at?.toDate && (
                 <span className="flex items-center gap-1">
                   <Clock size={11} />
@@ -110,7 +110,7 @@ export default function Inspector() {
             sessionStorage.setItem("cot_rerun_query", trace.query);
             router.push("/");
           }}
-          className="bg-gradient-primary text-primary-foreground border-0"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground border-0"
           size="sm"
         >
           <RefreshCw size={14} className="mr-1" /> Re-run
@@ -122,7 +122,7 @@ export default function Inspector() {
           <div className="px-4 py-3 border-b border-border bg-surface-raised/40">
             <h2 className="text-xs font-bold tracking-wider uppercase">Topology</h2>
           </div>
-          <div className="bg-background h-[440px] relative">
+          <div className="bg-background h-[320px] sm:h-[380px] lg:h-[440px] relative">
             {trace.plan ? (
               <div className="absolute inset-0 p-2">
                 <AgentGraph
@@ -145,14 +145,14 @@ export default function Inspector() {
           <div className="px-4 py-3 border-b border-border bg-surface-raised/40">
             <h2 className="text-xs font-bold tracking-wider uppercase">Final answer</h2>
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 min-h-[220px]">
             <p className="text-sm leading-relaxed whitespace-pre-wrap">{trace.answer}</p>
           </div>
         </section>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[420px]">
+        <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[340px] sm:h-[420px]">
           <div className="px-4 py-3 border-b border-border bg-surface-raised/40">
             <h2 className="text-xs font-bold tracking-wider uppercase">Agents</h2>
           </div>
@@ -187,7 +187,7 @@ export default function Inspector() {
           </div>
         </section>
 
-        <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[420px]">
+        <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[340px] sm:h-[420px]">
           <div className="px-4 py-3 border-b border-border bg-surface-raised/40">
             <h2 className="text-xs font-bold tracking-wider uppercase">
               {selectedRun ? `Inspect: ${selectedRun.name}` : "Select an agent"}

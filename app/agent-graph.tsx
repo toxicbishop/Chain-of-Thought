@@ -16,15 +16,15 @@ type AgentStatus = "pending" | "running" | "done" | "failed";
 
 // ── Agent Color System ──────────────────────────────────────────────────────
 // Each agent type gets a unique color for instant visual identification.
-const AGENT_COLORS: Record<string, { primary: string; glow: string; bg: string; text: string }> = {
-  research:   { primary: "#10B981", glow: "rgba(16,185,129,0.35)", bg: "rgba(16,185,129,0.08)",  text: "#059669" },
-  reason:     { primary: "#6366F1", glow: "rgba(99,102,241,0.35)", bg: "rgba(99,102,241,0.08)",  text: "#4F46E5" },
-  critique:   { primary: "#F59E0B", glow: "rgba(245,158,11,0.35)", bg: "rgba(245,158,11,0.08)",  text: "#D97706" },
-  synthesize: { primary: "#EC4899", glow: "rgba(236,72,153,0.35)", bg: "rgba(236,72,153,0.08)",  text: "#DB2777" },
-  tool:       { primary: "#8B5CF6", glow: "rgba(139,92,246,0.35)", bg: "rgba(139,92,246,0.08)",  text: "#7C3AED" },
+const AGENT_COLORS: Record<string, { primary: string; bg: string; text: string }> = {
+  research:   { primary: "#27845D", bg: "rgba(39,132,93,0.10)",  text: "#1E6F4D" },
+  reason:     { primary: "#1F7AAD", bg: "rgba(31,122,173,0.10)", text: "#17638E" },
+  critique:   { primary: "#B97412", bg: "rgba(185,116,18,0.12)", text: "#925A0C" },
+  synthesize: { primary: "#C43C5A", bg: "rgba(196,60,90,0.10)",  text: "#9F2F47" },
+  tool:       { primary: "#208C85", bg: "rgba(32,140,133,0.10)", text: "#166F6A" },
 };
 
-const DEFAULT_COLOR = { primary: "#6366F1", glow: "rgba(99,102,241,0.35)", bg: "rgba(99,102,241,0.08)", text: "#4F46E5" };
+const DEFAULT_COLOR = { primary: "#1F7AAD", bg: "rgba(31,122,173,0.10)", text: "#17638E" };
 
 function getAgentColor(capability: string) {
   return AGENT_COLORS[capability] ?? DEFAULT_COLOR;
@@ -93,12 +93,11 @@ export function AgentGraph({
         data: {
           label: (
             <div className="p-3 text-left relative overflow-hidden">
-              {/* Animated glow background for running state */}
               {isRunning && (
                 <div
-                  className="absolute inset-0 animate-pulse"
+                  className="absolute inset-y-0 left-0 w-1"
                   style={{
-                    background: `radial-gradient(ellipse at center, ${color.glow}, transparent 70%)`,
+                    background: color.primary,
                   }}
                 />
               )}
@@ -111,7 +110,6 @@ export function AgentGraph({
                     className={`w-2 h-2 rounded-full ${isRunning ? "animate-pulse" : ""}`}
                     style={{
                       backgroundColor: color.primary,
-                      boxShadow: isRunning ? `0 0 8px ${color.glow}` : "none",
                     }}
                   />
                   <span
@@ -171,12 +169,10 @@ export function AgentGraph({
               {isRunning && (
                 <div className="mt-2 h-[3px] rounded-full overflow-hidden relative z-10" style={{ backgroundColor: "var(--border)" }}>
                   <div
-                    className="h-full rounded-full animate-[shimmer_1.5s_ease-in-out_infinite]"
+                    className="h-full rounded-full"
                     style={{
                       width: "60%",
                       backgroundColor: color.primary,
-                      backgroundImage: `linear-gradient(90deg, ${color.primary}, ${color.glow}, ${color.primary})`,
-                      backgroundSize: "200% 100%",
                     }}
                   />
                 </div>
@@ -190,9 +186,9 @@ export function AgentGraph({
           borderRadius: "14px",
           width: 210,
           boxShadow: isRunning
-            ? `0 0 20px ${color.glow}, 0 4px 12px rgba(0,0,0,0.1)`
+            ? `0 8px 18px rgba(0,0,0,0.14), inset 0 0 0 999px ${color.bg}`
             : isDone
-            ? `0 0 8px ${color.glow}`
+            ? `0 8px 18px rgba(0,0,0,0.10), inset 0 0 0 999px ${color.bg}`
             : "0 2px 8px rgba(0,0,0,0.04)",
           cursor: "pointer",
           transition: "all 0.3s ease",
@@ -238,8 +234,8 @@ export function AgentGraph({
         source: sourceTask,
         target: d.task_id,
         animated: true,
-        style: { stroke: "#8B5CF6", strokeWidth: 2, strokeDasharray: "6,4" },
-        markerEnd: { type: MarkerType.ArrowClosed, color: "#8B5CF6" },
+        style: { stroke: "#208C85", strokeWidth: 2, strokeDasharray: "6,4" },
+        markerEnd: { type: MarkerType.ArrowClosed, color: "#208C85" },
       });
     }
 

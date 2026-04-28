@@ -56,7 +56,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
+    <div className="p-3 sm:p-4 md:p-8 max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-display font-semibold tracking-tight flex items-center gap-2">
           <SettingsIcon size={22} className="text-primary" />
@@ -73,7 +73,7 @@ export default function Settings() {
           <Label htmlFor="api-url" className="text-xs uppercase tracking-wider text-muted-foreground">
             API base URL
           </Label>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Input
               id="api-url"
               value={apiUrl}
@@ -81,10 +81,10 @@ export default function Settings() {
               placeholder="http://localhost:8080"
               className="bg-surface-raised font-mono text-sm"
             />
-            <Button onClick={saveApiUrl} size="sm" className="bg-gradient-primary text-primary-foreground border-0">
+            <Button onClick={saveApiUrl} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 sm:w-auto">
               <Save size={14} className="mr-1" /> Save
             </Button>
-            <Button onClick={resetApiUrl} variant="outline" size="sm">
+            <Button onClick={resetApiUrl} variant="outline" size="sm" className="sm:w-auto">
               <RotateCcw size={14} className="mr-1" /> Reset
             </Button>
           </div>
@@ -137,7 +137,7 @@ export default function Settings() {
             </select>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div>
               <Label className="text-sm">Stream responses</Label>
               <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -216,7 +216,7 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-surface border border-border rounded-2xl p-6 shadow-elegant">
+    <div className="bg-surface border border-border rounded-2xl p-4 sm:p-6 shadow-elegant">
       <div className="mb-5">
         <h2 className="text-base font-semibold">{title}</h2>
         {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
