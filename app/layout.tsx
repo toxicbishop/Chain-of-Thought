@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
-import ErrorBoundary from "./error-boundary";
+import { ClientProviders } from "@/components/ClientProviders";
 
 const syne = Syne({
   variable: "--font-syne",
@@ -37,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${outfit.variable} ${spaceMono.variable} antialiased`}
       >
-        <ErrorBoundary>{children}</ErrorBoundary>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );
