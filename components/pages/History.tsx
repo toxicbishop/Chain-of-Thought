@@ -44,9 +44,13 @@ export default function History() {
     const unsub = onSnapshot(
       q,
       (snap) => {
+        setError(null);
         setTraces(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<TraceDoc, "id">) })));
       },
-      (err) => setError(err.message)
+      (err) => {
+        setError(err.message);
+        setTraces([]);
+      }
     );
     return unsub;
   }, [user]);
@@ -62,8 +66,8 @@ export default function History() {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 sm:p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-display font-semibold tracking-tight flex items-center gap-2">
             <HistoryIcon size={22} className="text-primary" />
@@ -73,7 +77,7 @@ export default function History() {
             Saved reasoning runs from your workbench sessions.
           </p>
         </div>
-        <Button onClick={() => router.push("/")} variant="outline" size="sm">
+        <Button onClick={() => router.push("/")} variant="outline" size="sm" className="w-full sm:w-auto">
           New run
         </Button>
       </div>
@@ -99,7 +103,7 @@ export default function History() {
           <Loader2 className="animate-spin text-muted-foreground" size={20} />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-surface border border-border rounded-2xl p-16 text-center shadow-elegant">
+          <div className="bg-surface border border-border rounded-2xl p-8 sm:p-16 text-center shadow-elegant">
           <HistoryIcon size={32} className="mx-auto mb-4 text-muted-foreground opacity-50" />
           <h3 className="text-sm font-semibold mb-1">
             {filter ? "No matching traces" : "No traces yet"}
@@ -110,7 +114,7 @@ export default function History() {
               : "Run an inference on the workbench to start building history."}
           </p>
           {!filter && (
-            <Button onClick={() => router.push("/")} className="bg-gradient-primary text-primary-foreground border-0">
+            <Button onClick={() => router.push("/")} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0">
               Open Workbench
             </Button>
           )}
@@ -121,11 +125,11 @@ export default function History() {
             <button
               key={t.id}
               onClick={() => router.push(`/inspector/${t.id}`)}
-              className="w-full text-left px-4 py-4 flex items-center gap-4 hover:bg-surface-raised/50 transition-colors group"
+              className="w-full text-left px-3 sm:px-4 py-4 flex items-center gap-3 sm:gap-4 hover:bg-surface-raised/50 transition-colors group"
             >
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-foreground truncate">{t.query}</div>
-                <div className="flex items-center gap-3 mt-1 text-[11px] text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[11px] text-muted-foreground">
                   {t.created_at?.toDate && (
                     <span className="flex items-center gap-1">
                       <Clock size={11} />
@@ -154,7 +158,7 @@ export default function History() {
               </div>
               <button
                 onClick={(e) => handleDelete(t.id, e)}
-                className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
+                className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
                 aria-label="Delete trace"
               >
                 <Trash2 size={14} />

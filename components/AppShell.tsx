@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  Brain,
+  GitBranch,
   History,
   Settings,
   Activity,
@@ -17,11 +17,12 @@ import {
 import { onAuthChange, signOut } from "@/lib/firebase";
 import { useTheme, useLiveClock, useHealthCheck } from "@/lib/hooks";
 import { Button } from "@/components/ui/button";
+import { ReasonGraphLogo } from "@/components/ReasonGraphLogo";
 import { cn } from "@/lib/utils";
 import type { User } from "firebase/auth";
 
 const NAV = [
-  { to: "/", label: "Workbench", icon: Brain, end: true },
+  { to: "/", label: "Workbench", icon: GitBranch, end: true },
   { to: "/history", label: "History", icon: History },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
@@ -41,12 +42,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="hidden md:flex w-[240px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
         <div className="h-16 px-5 flex items-center gap-3 border-b border-sidebar-border">
-          <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <Brain className="text-primary-foreground" size={18} />
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <ReasonGraphLogo className="text-primary-foreground" />
           </div>
           <div className="flex flex-col leading-tight">
             <span className="font-display font-semibold text-sm tracking-tight text-sidebar-foreground">
-              Logic Flow
+              ReasonGraph
             </span>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
               Workbench
@@ -57,7 +58,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="px-3 py-4">
           <Button
             onClick={() => router.push("/")}
-            className="w-full justify-start gap-2 bg-gradient-primary hover:opacity-90 text-primary-foreground border-0 shadow-elegant"
+            className="w-full justify-start gap-2 bg-primary hover:bg-primary/90 text-primary-foreground border-0 shadow-elegant"
             size="sm"
           >
             <Plus size={16} /> New run
@@ -123,16 +124,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 shrink-0 flex items-center justify-between px-4 md:px-6 border-b border-border bg-surface">
           <div className="md:hidden flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-gradient-primary flex items-center justify-center">
-              <Brain className="text-primary-foreground" size={16} />
+            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+              <ReasonGraphLogo className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-semibold text-sm">Logic Flow</span>
+            <span className="font-display font-semibold text-sm">ReasonGraph</span>
           </div>
           <div className="ml-auto flex items-center gap-4 text-xs">
             <div className="hidden sm:flex items-center gap-2">
               <Server size={12} className="text-muted-foreground" />
               <span className="font-mono text-muted-foreground">{clock}</span>
             </div>
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Use light theme" : "Use dark theme"}
+              className="md:hidden p-2 rounded-md text-muted-foreground hover:bg-surface-raised hover:text-foreground transition-colors"
+            >
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <div className="flex items-center gap-2">
               <Activity size={12} className={health.ok ? "text-success" : "text-destructive"} />
               <span className="text-muted-foreground hidden sm:inline">{health.label}</span>
@@ -140,7 +148,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-background">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-background pb-16 md:pb-0">{children}</main>
+        <nav className="md:hidden h-14 border-t border-border bg-surface flex items-center justify-around">
+          {NAV.map(({ to, label, icon: Icon, end }) => {
+            const active = end ? pathname === to : pathname.startsWith(to);
+            return (
+              <Link
+                key={to}
+                href={to}
+                className={cn(
+                  "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] transition-colors",
+                  active ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <Icon size={17} />
+                <span className="truncate">{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </div>
   );

@@ -21,7 +21,6 @@ import {
   Zap,
   X,
   LayoutGrid,
-  Sparkles,
   Send,
   Loader2,
 } from "lucide-react";
@@ -385,13 +384,13 @@ export default function Workbench() {
 
   return (
     <>
-      <div className="p-4 md:p-6 space-y-4 max-w-[1600px] mx-auto">
+      <div className="p-3 sm:p-4 md:p-6 space-y-4 max-w-[1600px] mx-auto">
         {/* Query bar */}
         <section className="bg-surface rounded-xl shadow-elegant border border-border overflow-hidden">
-          <div className="p-4 flex gap-3 items-start">
+          <div className="p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:items-start">
             <div className="flex-1 relative">
               <textarea
-                className="w-full bg-surface-raised border border-border rounded-lg p-3 pr-12 text-sm leading-relaxed text-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none font-sans min-h-[60px] max-h-[140px]"
+                className="w-full bg-surface-raised border border-border rounded-lg p-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none font-sans min-h-[88px] sm:min-h-[60px] max-h-[160px]"
                 placeholder="Ask anything — the workbench will plan, delegate, reason, and synthesize. (⌘/Ctrl+Enter to run)"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -407,12 +406,11 @@ export default function Workbench() {
                   }
                 }}
               />
-              <Sparkles size={14} className="absolute top-3 right-3 text-muted-foreground" />
             </div>
             <button
               onClick={handleStream}
               disabled={streaming || !query.trim()}
-              className="bg-gradient-primary text-primary-foreground px-5 py-3 rounded-lg text-sm font-semibold hover:opacity-90 shadow-elegant transition-all disabled:opacity-50 whitespace-nowrap shrink-0 flex items-center gap-2"
+              className="w-full sm:w-auto justify-center bg-primary text-primary-foreground px-5 py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 shadow-elegant transition-colors disabled:opacity-50 whitespace-nowrap shrink-0 flex items-center gap-2"
             >
               {streaming ? (
                 <>
@@ -445,7 +443,7 @@ export default function Workbench() {
                 </span>
               )}
             </div>
-            <div className="bg-background min-h-[280px] h-[340px] flex-1 relative">
+            <div className="bg-background min-h-[300px] h-[42vh] max-h-[460px] lg:h-[340px] flex-1 relative">
               {plan ? (
                 <div className="absolute inset-0 p-2">
                   <AgentGraph
@@ -457,10 +455,10 @@ export default function Workbench() {
                   />
                 </div>
               ) : streaming ? (
-                <div className="w-full h-full flex items-center justify-center gap-6 p-6">
-                  <Skeleton className="w-32 h-16 rounded-2xl" />
-                  <Skeleton className="w-32 h-16 rounded-2xl" />
-                  <Skeleton className="w-32 h-16 rounded-2xl" />
+                <div className="w-full h-full flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 p-6">
+                  <Skeleton className="w-32 h-14 sm:h-16 rounded-2xl" />
+                  <Skeleton className="w-32 h-14 sm:h-16 rounded-2xl" />
+                  <Skeleton className="w-32 h-14 sm:h-16 rounded-2xl" />
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-3">
@@ -494,7 +492,7 @@ export default function Workbench() {
                 </span>
               )}
             </div>
-            <div className="flex-1 p-4 overflow-y-auto min-h-[280px]">
+            <div className="flex-1 p-4 overflow-y-auto min-h-[240px] md:min-h-[280px]">
               {answer ? (
                 <FormattedAnswer answer={answer} />
               ) : streaming ? (
@@ -516,7 +514,7 @@ export default function Workbench() {
 
         {/* Audit log + Internal thoughts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4">
-          <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[340px]">
+          <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[300px] sm:h-[340px]">
             <div className="px-4 py-3 border-b border-border bg-surface-raised/40 flex items-center justify-between">
               <h2 className="text-xs font-bold tracking-wider uppercase">Technical Audit Log</h2>
               {steps.length > 0 && (
@@ -548,7 +546,7 @@ export default function Workbench() {
             </div>
           </section>
 
-          <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[340px]">
+          <section className="bg-surface rounded-xl shadow-elegant border border-border flex flex-col h-[300px] sm:h-[340px]">
             <div className="px-4 py-3 border-b border-border bg-surface-raised/40 flex items-center justify-between">
               <h2 className="text-xs font-bold tracking-wider uppercase">Internal thoughts</h2>
               {thoughts.length > 0 && (
