@@ -71,7 +71,12 @@ export function useLiveClock() {
     const fmt = () => {
       const now = new Date();
       setTime(
-        now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }) + " IST"
+        now.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata",
+        }) + " IST"
       );
     };
     fmt();
@@ -180,9 +185,12 @@ export function useTheme() {
   const [theme, setThemeState] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const saved = (localStorage.getItem(THEME_KEY) as "light" | "dark") ?? "light";
+    const stored = localStorage.getItem(THEME_KEY) as "light" | "dark" | null;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const saved = stored ?? (prefersDark ? "dark" : "light");
     setThemeState(saved);
     document.documentElement.setAttribute("data-theme", saved);
+    document.documentElement.classList.toggle("dark", saved === "dark");
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -190,6 +198,7 @@ export function useTheme() {
       const next = prev === "dark" ? "light" : "dark";
       localStorage.setItem(THEME_KEY, next);
       document.documentElement.setAttribute("data-theme", next);
+      document.documentElement.classList.toggle("dark", next === "dark");
       return next;
     });
   }, []);
