@@ -22,9 +22,9 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chain-of-Thought Visualizer",
+  title: "ReasonGraph",
   description:
-    "Real-time visualization of transformer reasoning traces — attention weights, activation heatmaps, and structured CoT steps.",
+    "Real-time visualization of reasoning traces, agent delegation, and structured inference steps.",
 };
 
 export default function RootLayout({
@@ -42,4 +42,3 @@ export default function RootLayout({
     </html>
   );
 }
-
