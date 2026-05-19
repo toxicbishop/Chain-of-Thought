@@ -15,7 +15,6 @@ require (
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/go-openapi/swag/conv v0.25.4 // indirect
 	github.com/go-openapi/swag/fileutils v0.25.1 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.4 // indirect
@@ -27,7 +26,6 @@ require (
 	github.com/go-openapi/swag/yamlutils v0.25.4 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
-	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 )
@@ -52,7 +50,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/weaviate/weaviate v1.27.0
+	github.com/weaviate/weaviate v1.30.20
 	go.mongodb.org/mongo-driver v1.17.6 // indirect
 	golang.org/x/net v0.53.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
