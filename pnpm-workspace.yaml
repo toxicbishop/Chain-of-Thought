@@ -6,3 +6,7 @@ allowBuilds:
 
 overrides:
   postcss: ">=8.5.10"
+  "@grpc/grpc-js": ">=1.9.16"
+
+patchedDependencies:
+  postcss: patches/postcss.patch
