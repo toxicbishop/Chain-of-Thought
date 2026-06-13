@@ -52,6 +52,12 @@ func directProjectLevelAnswer(question, content, source string, chunkIndex int) 
 	if !strings.Contains(q, "level") && !strings.Contains(q, "stage") && !strings.Contains(q, "status") {
 		return ""
 	}
+
+	// Prevent ReDoS by limiting input length before applying regex
+	if len(content) > 4096 {
+		content = content[:4096]
+	}
+
 	matches := projectLevelPattern.FindStringSubmatch(content)
 	if len(matches) < 2 {
 		return ""

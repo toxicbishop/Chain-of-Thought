@@ -25,6 +25,12 @@ export default function Login() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (password.length > 128) {
+      setError("Password cannot exceed 128 characters.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -76,6 +82,7 @@ export default function Login() {
                 type="password"
                 required
                 minLength={6}
+                maxLength={128}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
