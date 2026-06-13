@@ -1,0 +1,13 @@
+diff --git a/lib/stringifier.js b/lib/stringifier.js
+index b1aa835d87a41ab90c55cb87c636443a0787ec81..c06411881bef6e1e430df5ac6847f8d490dec3ac 100644
+--- a/lib/stringifier.js
++++ b/lib/stringifier.js
+@@ -9,7 +9,7 @@ const COMMENT_OPEN = /(<)(!--)/g
+ function escapeHTMLInCSS(str) {
+   if (typeof str !== 'string') return str
+   if (!str.includes('<')) return str
+-  return str.replace(STYLE_TAG, '\\3c $2').replace(COMMENT_OPEN, '\\3c $2')
++  return str.replace(/<\/(style)/gi, '<\\/$1').replace(STYLE_TAG, '\\3c $2').replace(COMMENT_OPEN, '\\3c $2')
+ }
+ 
+ const DEFAULT_RAW = {
