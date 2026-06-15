@@ -6,6 +6,7 @@ package kafka
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 
@@ -105,19 +106,35 @@ func (s *Service) StartRequestConsumer(ctx context.Context, pipeline *transforme
 	if !s.enabled {
 		return
 	}
-	s.consumer.StartLoop(ctx, func(key, value []byte) {
+	
+	s.consumer.SetDLQHandler(func(key, value []byte) {
+		if err := s.producer.Publish(ctx, TopicReasoningRequestsDLQ, string(key), value); err != nil {
+			log.Printf("[kafka consumer] failed to publish to DLQ: %v", err)
+		}
+	})
+
+	s.consumer.StartLoop(ctx, func(key, value []byte) error {
 		var req struct {
 			Query string `json:"query"`
 		}
 		if err := json.Unmarshal(value, &req); err != nil || req.Query == "" {
 			log.Printf("[kafka consumer] invalid/empty message — skipping: %s", value)
-			return
+			return nil // returning nil so it doesn't retry bad JSON
 		}
 		log.Printf("[kafka consumer] processing async query: %q", req.Query)
+		
+		// If pipeline.Run crashes, we could capture it, but for now we
+		// assume trace contains failure info or we just run it.
+		// To simulate a possible error for retries, one could check trace.Answer.
 		trace := pipeline.Run(req.Query)
+		if trace.Answer == "failed" {
+			return fmt.Errorf("pipeline processing failed for query: %s", req.Query)
+		}
+
 		s.PublishTrace(ctx, trace)
 		s.PublishEvents(ctx, trace)
 		log.Printf("[kafka consumer] async query done: %q — %d steps", req.Query, len(trace.CoTSteps))
+		return nil
 	})
 }
 

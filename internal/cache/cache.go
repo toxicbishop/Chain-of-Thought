@@ -15,6 +15,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"sync/atomic"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -32,6 +33,8 @@ type Service struct {
 	client  *redis.Client
 	ttl     time.Duration
 	enabled bool
+	hits    atomic.Uint64
+	misses  atomic.Uint64
 }
 
 // NewService creates a Service connected to the Redis instance at redisURL.
@@ -72,6 +75,16 @@ func NewService(redisURL string) *Service {
 	return &Service{client: client, ttl: ttl, enabled: true}
 }
 
+// Stats returns the current hit and miss counters.
+func (s *Service) Stats() (hits, misses uint64) {
+	return s.hits.Load(), s.misses.Load()
+}
+
+// Client returns the underlying Redis client.
+func (s *Service) Client() *redis.Client {
+	return s.client
+}
+
 // Enabled reports whether Redis is active.
 func (s *Service) Enabled() bool { return s.enabled }
 
@@ -85,19 +98,23 @@ func (s *Service) GetTrace(ctx context.Context, query string) (transformer.Reaso
 	key := cacheKey(query)
 	data, err := s.client.Get(ctx, key).Bytes()
 	if err == redis.Nil {
+		s.misses.Add(1)
 		return transformer.ReasoningTrace{}, false // cache miss
 	}
 	if err != nil {
 		log.Printf("[cache] GET error key=%s: %v", key, err)
+		s.misses.Add(1)
 		return transformer.ReasoningTrace{}, false
 	}
 
 	var trace transformer.ReasoningTrace
 	if err := json.Unmarshal(data, &trace); err != nil {
 		log.Printf("[cache] unmarshal error key=%s: %v", key, err)
+		s.misses.Add(1)
 		return transformer.ReasoningTrace{}, false
 	}
 
+	s.hits.Add(1)
 	log.Printf("[cache] HIT query=%q key=%s", query, key)
 	return trace, true
 }
