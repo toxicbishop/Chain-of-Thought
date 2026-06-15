@@ -41,7 +41,7 @@ services:
       timeout: 10s
       retries: 10
 
-  # ── Kafka UI (optional — comment out if not needed) ───────────────────────────
+  # ── Kafka UI ─────────────────────────────────────────────────────────────────
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: noetic-kafka-ui
@@ -108,6 +108,7 @@ services:
     environment:
       - PORT=3000
       - NEXT_PUBLIC_API_URL=http://app:8080
+
   # ── Weaviate Vector DB ────────────────────────────────────────────────────────
   weaviate:
     image: cr.weaviate.io/semitechnologies/weaviate:1.24.1
@@ -152,9 +153,12 @@ services:
       - "3001:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/backend.json
 
 volumes:
   redis_data:
