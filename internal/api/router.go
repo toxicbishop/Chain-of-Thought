@@ -70,13 +70,13 @@ func NewRouter(model *transformer.Model, kafkaSvc *kafka.Service, cacheSvc *cach
 
 	// ── Public routes ────────────────────────────────────────────────────────
 	mx.HandleFunc("/health", r.health).Methods("GET")
-	mx.HandleFunc("/metrics", metrics.Handler()).Methods("GET")
+	mx.Handle("/metrics", metrics.Handler()).Methods("GET")
 
 	// ── Protected subrouter — all routes require a valid Bearer JWT ──────────
 	protected := mx.NewRoute().Subrouter()
 	protected.Use(limitBody)
 	protected.Use(auth.Middleware)
-	protected.Use(perUserRateLimit(newRateLimiterStore()))
+	protected.Use(perUserRateLimit(r.cache.Client()))
 
 	protected.HandleFunc("/auth/me", r.me).Methods("GET")
 	protected.HandleFunc("/api/reason", r.reason).Methods("POST")
@@ -435,12 +435,19 @@ func (r *Router) kafkaStatus(w http.ResponseWriter, req *http.Request) {
 
 // GET /api/cache/status
 func (r *Router) cacheStatus(w http.ResponseWriter, _ *http.Request) {
+	hits, misses := uint64(0), uint64(0)
+	if r.cache.Enabled() {
+		hits, misses = r.cache.Stats()
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]any{
 		"cache_enabled": r.cache.Enabled(),
 		"status":        map[bool]string{true: "enabled", false: "disabled"}[r.cache.Enabled()],
 		"key_prefix":    "noetic:trace:",
 		"note":          "TTL controlled by REDIS_CACHE_TTL env var (seconds, default 3600)",
+		"hits":          hits,
+		"misses":        misses,
 	})
 }
 

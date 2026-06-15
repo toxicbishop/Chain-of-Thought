@@ -97,9 +97,9 @@ async function apiFetch<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const token = await getIdToken();
+  let token = await getIdToken();
 
-  const res = await fetch(path, {
+  let res = await fetch(path, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -107,6 +107,19 @@ async function apiFetch<T>(
       ...options.headers,
     },
   });
+
+  if (res.status === 401) {
+    // Attempt token refresh and retry once
+    token = await getIdToken(true);
+    res = await fetch(path, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+  }
 
   if (!res.ok) {
     const body = await res.text();
@@ -160,9 +173,9 @@ export async function reasonStream(
   signal?: AbortSignal,
   settings?: { temperature: number; maxTokens: number }
 ): Promise<void> {
-  const token = await getIdToken();
+  let token = await getIdToken();
 
-  const res = await fetch("/api/reason/stream", {
+  let res = await fetch("/api/reason/stream", {
     method: "POST",
     signal,
     headers: {
@@ -171,6 +184,19 @@ export async function reasonStream(
     },
     body: JSON.stringify({ query, settings }),
   });
+
+  if (res.status === 401) {
+    token = await getIdToken(true);
+    res = await fetch("/api/reason/stream", {
+      method: "POST",
+      signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ query, settings }),
+    });
+  }
 
   if (!res.ok || !res.body) {
     throw new Error(`Stream failed: ${res.status} ${res.statusText}`);
