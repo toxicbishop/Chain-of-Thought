@@ -9,12 +9,14 @@ import (
 )
 
 // MessageHandler is called for every message the consumer reads.
-type MessageHandler func(key, value []byte)
+// It returns an error if processing failed, which triggers retries.
+type MessageHandler func(key, value []byte) error
 
 // Consumer wraps a kafka-go reader for a single topic + consumer group.
 type Consumer struct {
-	reader *kafka.Reader
-	topic  string
+	reader     *kafka.Reader
+	topic      string
+	dlqHandler func(key, value []byte) // optional DLQ publisher
 }
 
 // NewConsumer creates a Consumer for the given topic and consumer group.
@@ -30,6 +32,11 @@ func NewConsumer(brokers []string, topic, groupID string) *Consumer {
 		StartOffset:    kafka.LastOffset, // start from new messages only
 	})
 	return &Consumer{reader: r, topic: topic}
+}
+
+// SetDLQHandler configures the function called when a message exceeds retries.
+func (c *Consumer) SetDLQHandler(handler func(key, value []byte)) {
+	c.dlqHandler = handler
 }
 
 // StartLoop launches a goroutine that calls handler for every incoming message.
@@ -48,7 +55,20 @@ func (c *Consumer) StartLoop(ctx context.Context, handler MessageHandler) {
 				log.Printf("[kafka consumer] read error on topic=%s: %v — retrying", c.topic, err)
 				continue
 			}
-			handler(msg.Key, msg.Value)
+			
+			var processErr error
+			for i := 0; i < 3; i++ {
+				if processErr = handler(msg.Key, msg.Value); processErr == nil {
+					break
+				}
+				log.Printf("[kafka consumer] processing failed (attempt %d/3): %v", i+1, processErr)
+				time.Sleep(time.Duration(i+1) * time.Second)
+			}
+			
+			if processErr != nil && c.dlqHandler != nil {
+				log.Printf("[kafka consumer] message failed after 3 retries, moving to DLQ")
+				c.dlqHandler(msg.Key, msg.Value)
+			}
 		}
 	}()
 }

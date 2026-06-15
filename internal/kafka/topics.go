@@ -6,6 +6,9 @@ const (
 	// contains a JSON {"query":"..."} and triggers a pipeline run.
 	TopicReasoningRequests = "reasoning-requests"
 
+	// TopicReasoningRequestsDLQ receives messages that failed to process.
+	TopicReasoningRequestsDLQ = "reasoning-requests-dlq"
+
 	// TopicReasoningTraces receives the full ReasoningTrace JSON produced after
 	// every pipeline run (both HTTP-triggered and consumer-triggered).
 	TopicReasoningTraces = "reasoning-traces"

@@ -99,6 +99,17 @@ cot-backend/
 
 ![System Design](public/assets/system-design.svg)
 
+## Architecture Walkthrough (Request Lifecycle)
+
+1. **User Query**: A user submits a reasoning query via the Next.js frontend, authenticated via Firebase.
+2. **Next.js API & Routing**: The request hits `lib/api.ts` which automatically attaches the JWT and sends it to the Go backend.
+3. **Go Handler & Rate Limiting**: The `POST /api/reason` endpoint receives the request. The Redis-backed rate limiter verifies the user hasn't exceeded their quota.
+4. **Redis Cache Check**: The backend hashes the query and checks Redis. On a hit, it returns immediately with `X-Cache: HIT`.
+5. **Orchestrator & Agents**: On a cache miss, the Multi-Agent Orchestrator executes a Planner → Router → Coordinator pipeline. Sub-agents (Researcher, Reasoner, etc.) are invoked via Gemini REST calls.
+6. **Parallel Transformer**: A local Go transformer runs in parallel to extract token, attention, and activation snapshots for UI visualization.
+7. **Kafka Publish**: The resulting trace and individual events are published to `reasoning-traces` and `cot-events` Kafka topics.
+8. **SSE Streaming**: If the streaming endpoint was hit, all agent actions, thoughts, and LLM events stream back to the UI in real-time as SSE.
+
 The diagram above shows the full request flow — from the Next.js frontend through the Go backend, Redis cache, and Kafka event bus.
 
 > **Want to edit it?** Open [`system-design.drawio`](public/assets/system-design.drawio) in [draw.io](https://draw.io) (desktop app or browser). After making changes, re-export as SVG and overwrite `public/assets/system-design.svg`. Both files are tracked in version control so the diagram stays in sync with the codebase.
