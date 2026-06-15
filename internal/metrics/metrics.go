@@ -23,9 +23,10 @@ var (
 	}, []string{"agent", "status"})
 
 	// AgentDurationSeconds tracks agent execution latency by agent name.
-	AgentDurationSeconds = promauto.NewSummaryVec(prometheus.SummaryOpts{
-		Name: "cot_agent_duration_seconds",
-		Help: "Agent execution latency.",
+	AgentDurationSeconds = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "cot_agent_duration_seconds",
+		Help:    "Agent execution latency.",
+		Buckets: prometheus.DefBuckets,
 	}, []string{"agent"})
 
 	// CacheHitsTotal counts cache lookups by result (hit/miss).
