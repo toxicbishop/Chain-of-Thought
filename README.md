@@ -124,6 +124,9 @@ The diagram above shows the full request flow — from the Next.js frontend thro
 | **kafka**     | `confluentinc/cp-kafka:7.6.0`     | Async inference requests & trace events | `9092` |
 | **zookeeper** | `confluentinc/cp-zookeeper:7.6.0` | Kafka coordination                      | `2181` |
 | **redis**     | `redis:7.2-alpine`                | Trace & activation caching (persisted)  | `6379` |
+| **weaviate**  | `semitechnologies/weaviate:1.24.1`| RAG vector storage and retrieval        | `8081` |
+| **prometheus**| `prom/prometheus:v2.53.0`         | Metrics aggregation                     | `9090` |
+| **grafana**   | `grafana/grafana:11.1.0`          | Metrics dashboard                       | `3001` |
 | **kafka-ui**  | `provectuslabs/kafka-ui`          | Visual topic browser                    | `8090` |
 
 > Kafka and Redis are **optional at runtime**. The server degrades gracefully when either is unavailable — reasoning still works, just without caching or event streaming.

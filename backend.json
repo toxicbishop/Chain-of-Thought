@@ -1,45 +1,102 @@
 {
   "__inputs": [],
   "__requires": [
-    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "11.1.0" },
-    { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0" },
-    { "type": "panel", "id": "timeseries", "name": "Time series", "version": "" },
-    { "type": "panel", "id": "stat", "name": "Stat", "version": "" },
-    { "type": "panel", "id": "gauge", "name": "Gauge", "version": "" },
-    { "type": "panel", "id": "barchart", "name": "Bar chart", "version": "" }
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.1.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "barchart",
+      "name": "Bar chart",
+      "version": ""
+    }
   ],
-  "annotations": { "list": [] },
-  "description": "Chain-of-Thought backend — request traffic, agent performance, cache, LLM errors, and SSE sessions.",
+  "annotations": {
+    "list": []
+  },
+  "description": "Chain-of-Thought backend \u2014 request traffic, agent performance, cache, LLM errors, and SSE sessions.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
   "links": [],
   "panels": [
-
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
       "id": 100,
       "title": "Traffic",
       "type": "row"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "reqps"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
       "id": 1,
       "options": {
-        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
@@ -51,22 +108,43 @@
       "title": "Request Rate by Path (req/s)",
       "type": "timeseries"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "reqps"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
       "id": 2,
       "options": {
-        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
@@ -78,57 +156,103 @@
       "title": "Request Rate by Method (req/s)",
       "type": "timeseries"
     },
-
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "id": 101,
       "title": "Agent Performance",
       "type": "row"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "ops"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
       "id": 3,
       "options": {
-        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
           "expr": "sum(rate(cot_agent_runs_total[2m])) by (agent, status)",
-          "legendFormat": "{{agent}} · {{status}}",
+          "legendFormat": "{{agent}} \u00b7 {{status}}",
           "refId": "A"
         }
       ],
       "title": "Agent Run Rate by Agent & Status",
       "type": "timeseries"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "s"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
       "id": 4,
       "options": {
-        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
@@ -150,18 +274,31 @@
       "title": "Agent Latency (avg / p90 / p99)",
       "type": "timeseries"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
+          "color": {
+            "mode": "thresholds"
+          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.05 },
-              { "color": "red", "value": 0.1 }
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.05
+              },
+              {
+                "color": "red",
+                "value": 0.1
+              }
             ]
           },
           "unit": "percentunit",
@@ -170,10 +307,19 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 18 },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 18
+      },
       "id": 5,
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "orientation": "auto",
         "textMode": "auto",
         "colorMode": "background"
@@ -188,22 +334,42 @@
       "title": "Agent Failure Rate (5m window)",
       "type": "stat"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "ops"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 16, "x": 8, "y": 18 },
+      "gridPos": {
+        "h": 6,
+        "w": 16,
+        "x": 8,
+        "y": 18
+      },
       "id": 6,
       "options": {
-        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
@@ -215,26 +381,43 @@
       "title": "LLM Errors by Agent (rate/2m)",
       "type": "timeseries"
     },
-
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 24 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
       "id": 102,
       "title": "Cache",
       "type": "row"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
+          "color": {
+            "mode": "thresholds"
+          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": null },
-              { "color": "yellow", "value": 0.5 },
-              { "color": "green", "value": 0.8 }
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "green",
+                "value": 0.8
+              }
             ]
           },
           "unit": "percentunit",
@@ -243,10 +426,19 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 25 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 25
+      },
       "id": 7,
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "orientation": "auto",
         "textMode": "value_and_name",
         "colorMode": "background",
@@ -262,31 +454,74 @@
       "title": "Cache Hit Ratio (5m)",
       "type": "stat"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
           "unit": "ops"
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "hit" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "hit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "miss" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "miss"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 6, "w": 18, "x": 6, "y": 25 },
+      "gridPos": {
+        "h": 6,
+        "w": 18,
+        "x": 6,
+        "y": 25
+      },
       "id": 8,
       "options": {
-        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "targets": [
         {
@@ -298,27 +533,47 @@
       "title": "Cache Hit / Miss Rate (req/s)",
       "type": "timeseries"
     },
-
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
       "id": 103,
       "title": "SSE Streaming",
       "type": "row"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
+          "color": {
+            "mode": "thresholds"
+          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "blue", "value": null },
-              { "color": "green", "value": 1 },
-              { "color": "yellow", "value": 50 },
-              { "color": "red", "value": 200 }
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 200
+              }
             ]
           },
           "unit": "short",
@@ -326,10 +581,19 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 32 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 32
+      },
       "id": 9,
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "orientation": "auto",
         "textMode": "value_and_name",
         "colorMode": "background",
@@ -345,22 +609,44 @@
       "title": "Active SSE Sessions",
       "type": "stat"
     },
-
     {
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 20 },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 20
+          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 18, "x": 6, "y": 32 },
+      "gridPos": {
+        "h": 6,
+        "w": 18,
+        "x": 6,
+        "y": 32
+      },
       "id": 10,
       "options": {
-        "legend": { "calcs": ["mean", "max", "last"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "single" }
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
       },
       "targets": [
         {
@@ -371,17 +657,263 @@
       ],
       "title": "SSE Session Count Over Time",
       "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 104,
+      "title": "Kafka Consumer",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 39
+      },
+      "id": 11,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "area"
+      },
+      "targets": [
+        {
+          "expr": "cot_kafka_consumer_lag",
+          "legendFormat": "{{topic}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Consumer Lag (messages behind)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 18,
+        "x": 6,
+        "y": 39
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "cot_kafka_consumer_lag",
+          "legendFormat": "{{topic}} lag",
+          "refId": "A"
+        }
+      ],
+      "title": "Consumer Lag Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 45
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(cot_kafka_messages_processed_total[2m])",
+          "legendFormat": "{{topic}} processed",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(cot_kafka_dlq_total[2m])",
+          "legendFormat": "{{topic}} DLQ",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(cot_kafka_retries_total[2m])",
+          "legendFormat": "{{topic}} retries",
+          "refId": "C"
+        }
+      ],
+      "title": "Message Throughput \u2014 Processed / DLQ / Retries (rate/2m)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 45
+      },
+      "id": 14,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "targets": [
+        {
+          "expr": "increase(cot_kafka_dlq_total[1h])",
+          "legendFormat": "{{topic}}",
+          "refId": "A"
+        }
+      ],
+      "title": "DLQ Routing \u2014 Last 1h",
+      "type": "stat"
     }
   ],
-
   "refresh": "10s",
   "schemaVersion": 39,
-  "tags": ["noetic", "chain-of-thought", "backend"],
-  "templating": { "list": [] },
-  "time": { "from": "now-1h", "to": "now" },
+  "tags": [
+    "noetic",
+    "chain-of-thought",
+    "backend"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Noetic — CoT Backend",
+  "title": "Noetic \u2014 CoT Backend",
   "uid": "noetic-cot-backend",
   "version": 1
 }

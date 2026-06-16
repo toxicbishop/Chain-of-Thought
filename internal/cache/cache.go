@@ -20,6 +20,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
+	"cot-backend/internal/metrics"
 	"cot-backend/internal/transformer"
 )
 
@@ -99,11 +100,13 @@ func (s *Service) GetTrace(ctx context.Context, query string) (transformer.Reaso
 	data, err := s.client.Get(ctx, key).Bytes()
 	if err == redis.Nil {
 		s.misses.Add(1)
+		metrics.CacheHitsTotal.WithLabelValues("miss").Inc()
 		return transformer.ReasoningTrace{}, false // cache miss
 	}
 	if err != nil {
 		log.Printf("[cache] GET error key=%s: %v", key, err)
 		s.misses.Add(1)
+		metrics.CacheHitsTotal.WithLabelValues("miss").Inc()
 		return transformer.ReasoningTrace{}, false
 	}
 
@@ -111,10 +114,12 @@ func (s *Service) GetTrace(ctx context.Context, query string) (transformer.Reaso
 	if err := json.Unmarshal(data, &trace); err != nil {
 		log.Printf("[cache] unmarshal error key=%s: %v", key, err)
 		s.misses.Add(1)
+		metrics.CacheHitsTotal.WithLabelValues("miss").Inc()
 		return transformer.ReasoningTrace{}, false
 	}
 
 	s.hits.Add(1)
+	metrics.CacheHitsTotal.WithLabelValues("hit").Inc()
 	log.Printf("[cache] HIT query=%q key=%s", query, key)
 	return trace, true
 }

@@ -113,6 +113,7 @@ func (s *Service) StartRequestConsumer(ctx context.Context, pipeline *transforme
 		}
 	})
 
+	s.consumer.StartLagPoller(ctx, 15*time.Second)
 	s.consumer.StartLoop(ctx, func(key, value []byte) error {
 		var req struct {
 			Query string `json:"query"`
