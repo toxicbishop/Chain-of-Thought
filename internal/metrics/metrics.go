@@ -1,12 +1,12 @@
 package metrics
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
 )
 
 var (
@@ -47,8 +47,6 @@ var (
 	})
 
 	// KafkaConsumerLag tracks the number of unprocessed messages per topic.
-	// Label "topic" maps to the Kafka topic being consumed.
-	// Updated periodically by the lag poller in the consumer.
 	KafkaConsumerLag = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "cot_kafka_consumer_lag",
 		Help: "Number of unprocessed messages between latest offset and last committed offset, per topic.",
@@ -71,6 +69,14 @@ var (
 		Name: "cot_kafka_retries_total",
 		Help: "Total retry attempts before success or DLQ routing.",
 	}, []string{"topic"})
+
+	// RateLimitChecks counts rate limit decisions by path and result.
+	// result label values: "allowed", "rejected", "error"
+	// path label is the request URL path, giving per-endpoint visibility.
+	RateLimitChecks = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "cot_rate_limit_checks_total",
+		Help: "Total rate limit evaluations, labelled by endpoint path and result (allowed/rejected/error).",
+	}, []string{"path", "result"})
 )
 
 // RecordAgentRun is a convenience helper called by the executor.

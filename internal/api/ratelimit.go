@@ -3,10 +3,11 @@ package api
 import (
 	"net/http"
 
-	"github.com/redis/go-redis/v9"
 	"github.com/go-redis/redis_rate/v10"
+	"github.com/redis/go-redis/v9"
 
 	"cot-backend/internal/auth"
+	"cot-backend/internal/metrics"
 )
 
 // perUserRateLimit returns middleware that enforces per-user rate limiting using Redis.
@@ -29,20 +30,24 @@ func perUserRateLimit(rdb *redis.Client) func(http.Handler) http.Handler {
 			}
 
 			if limiter == nil {
-				// Rate limiting is disabled if no Redis client
+				// Rate limiting is disabled if no Redis client.
 				next.ServeHTTP(w, r)
 				return
 			}
 
-			// Allow 5 requests per second
+			path := r.URL.Path
+
+			// Allow 5 requests per second per user.
 			res, err := limiter.Allow(r.Context(), "rate_limit:"+claims.Subject, redis_rate.PerSecond(5))
 			if err != nil {
-				// Fail open on Redis errors
+				// Fail open on Redis errors, but record the event.
+				metrics.RateLimitChecks.WithLabelValues(path, "error").Inc()
 				next.ServeHTTP(w, r)
 				return
 			}
 
 			if res.Allowed == 0 {
+				metrics.RateLimitChecks.WithLabelValues(path, "rejected").Inc()
 				w.Header().Set("Content-Type", "application/json")
 				w.Header().Set("Retry-After", "1")
 				w.WriteHeader(http.StatusTooManyRequests)
@@ -50,6 +55,7 @@ func perUserRateLimit(rdb *redis.Client) func(http.Handler) http.Handler {
 				return
 			}
 
+			metrics.RateLimitChecks.WithLabelValues(path, "allowed").Inc()
 			next.ServeHTTP(w, r)
 		})
 	}
