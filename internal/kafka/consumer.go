@@ -7,7 +7,7 @@ import (
 
 	kafka "github.com/segmentio/kafka-go"
 
-	"github.com/toxicbishop/Chain-of-Thought/internal/metrics"
+	"cot-backend/internal/metrics"
 )
 
 // MessageHandler is called for every message the consumer reads.
