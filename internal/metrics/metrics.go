@@ -45,6 +45,32 @@ var (
 		Name: "cot_stream_sessions_active",
 		Help: "Currently open SSE connections.",
 	})
+
+	// KafkaConsumerLag tracks the number of unprocessed messages per topic.
+	// Label "topic" maps to the Kafka topic being consumed.
+	// Updated periodically by the lag poller in the consumer.
+	KafkaConsumerLag = promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "cot_kafka_consumer_lag",
+		Help: "Number of unprocessed messages between latest offset and last committed offset, per topic.",
+	}, []string{"topic"})
+
+	// KafkaDLQTotal counts messages routed to the dead letter queue per topic.
+	KafkaDLQTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "cot_kafka_dlq_total",
+		Help: "Total messages moved to the DLQ after exhausting retries.",
+	}, []string{"topic"})
+
+	// KafkaMessagesProcessed counts successfully processed messages per topic.
+	KafkaMessagesProcessed = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "cot_kafka_messages_processed_total",
+		Help: "Total messages successfully processed by the consumer.",
+	}, []string{"topic"})
+
+	// KafkaRetries counts retry attempts per topic.
+	KafkaRetries = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "cot_kafka_retries_total",
+		Help: "Total retry attempts before success or DLQ routing.",
+	}, []string{"topic"})
 )
 
 // RecordAgentRun is a convenience helper called by the executor.
