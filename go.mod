@@ -107,7 +107,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/weaviate/weaviate v1.38.0
-	go.mongodb.org/mongo-driver v1.17.6 // indirect
+	go.mongodb.org/mongo-driver v1.17.7 // indirect
 	golang.org/x/net v0.53.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sys v0.43.0 // indirect
