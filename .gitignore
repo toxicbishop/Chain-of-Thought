@@ -3,6 +3,7 @@
 .env.local
 .env.*.local
 .env.production
+.env.sepolia
 
 # ── Go ───────────────────────────────────────────────────────────────────────
 # Compiled binaries
