@@ -97,7 +97,7 @@ cot-backend/
 
 ## System Design
 
-![System Design](public/assets/system-design.svg)
+![System Design](public/assets/Chain-of-Thought%20%E2%80%94%20System%20Architecture.png)
 
 ## Architecture Walkthrough (Request Lifecycle)
 
