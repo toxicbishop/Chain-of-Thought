@@ -14,7 +14,7 @@ require (
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go/modules/kafka v0.42.0
-	github.com/weaviate/weaviate v1.26.2
+	github.com/weaviate/weaviate v1.26.18
 	github.com/weaviate/weaviate-go-client/v4 v4.15.1
 )
 
@@ -81,7 +81,7 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.51.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/mod v0.35.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 )

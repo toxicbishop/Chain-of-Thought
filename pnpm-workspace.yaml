@@ -6,4 +6,5 @@ allowBuilds:
 
 overrides:
   "@grpc/grpc-js": ">=1.9.16"
+  "postcss": ">=8.5.10"
 
