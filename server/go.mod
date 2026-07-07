@@ -14,7 +14,7 @@ require (
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go/modules/kafka v0.42.0
-	github.com/weaviate/weaviate v1.26.18
+	github.com/weaviate/weaviate v1.30.20
 	github.com/weaviate/weaviate-go-client/v4 v4.15.1
 )
 
