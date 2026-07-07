@@ -1,19 +1,21 @@
-# ---- Build stage ----
-FROM golang:1.26-alpine AS builder
-
+FROM node:24-alpine AS builder
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o cot-server ./main.go
+ENV NEXT_PUBLIC_API_URL=http://app:8080
+RUN pnpm run build
 
-# ---- Runtime stage ----
-# Use alpine instead of scratch for CA certificates (needed for TLS to Kafka brokers)
-FROM alpine:3.19
-RUN apk add --no-cache ca-certificates tzdata
+FROM node:24-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+# Next.js standalone output configuration
+COPY --from=builder /app/next.config.ts ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-COPY --from=builder /app/cot-server /cot-server
-
-EXPOSE 8080
-ENTRYPOINT ["/cot-server"]
+EXPOSE 3000
+CMD ["node", "server.js"]

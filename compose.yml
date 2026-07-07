@@ -71,7 +71,7 @@ services:
 
   # ── CoT Backend ──────────────────────────────────────────────────────────────
   app:
-    build: .
+    build: ./server
     container_name: noetic-app
     depends_on:
       kafka:
@@ -95,9 +95,7 @@ services:
 
   # ── CoT Frontend ─────────────────────────────────────────────────────────────
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    build: .
     container_name: noetic-frontend
     depends_on:
       - app
