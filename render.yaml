@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: cot-backend
+    env: go
+    rootDir: server
+    buildCommand: go build -o main ./cmd/server
+    startCommand: ./main
+    envVars:
+      - key: PORT
+        value: 8080
