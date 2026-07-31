@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "chain-of-thought-go",
   "version": "0.1.0",
   "private": true,
   "license": "GPL-3.0-only",
@@ -44,11 +44,6 @@
     "eslint-config-next": "16.2.1",
     "tailwindcss": "^4.3.2",
     "typescript": "^5.9.3"
-  },
-  "resolutions": {
-    "@grpc/grpc-js": ">=1.9.16"
-  },
-  "overrides": {
-    "@grpc/grpc-js": ">=1.9.16"
+
   }
 }
